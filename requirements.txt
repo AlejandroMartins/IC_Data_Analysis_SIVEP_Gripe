@@ -1,0 +1,14 @@
+pandas
+numpy<2.0.0
+matplotlib
+seaborn
+scikit-learn==1.3.2
+scikit-learn-extra
+tslearn
+statsmodels
+scipy
+joblib
+threadpoolctl
+networkx
+setuptools
+h5py

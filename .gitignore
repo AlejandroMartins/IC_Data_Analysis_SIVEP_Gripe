@@ -1,0 +1,26 @@
+# Ambientes virtuais
+venv/
+.venv/
+env/
+
+# Dados (Arquivos pesados que não devem ir ao Git)
+data/raw/*.csv
+data/processed/*.csv
+data/results/
+
+# Gráficos e Relatórios (Opcional, geralmente gerados localmente)
+reports/figures/
+
+# Cache do Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDEs
+.vscode/
+.idea/
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.zip
