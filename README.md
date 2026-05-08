@@ -34,8 +34,7 @@ Este projeto é uma plataforma modular desenvolvida em Python para o processamen
 
 1. **Clone o Repositório**:
    ```bash
-   git clone https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git
-   cd SEU_REPOSITORIO
+   git clone https://github.com/AlejandroMartins/IC_Data_Analysis_SIVEP_Gripe.git
    ```
 
 2. **Crie o Ambiente Virtual**:
