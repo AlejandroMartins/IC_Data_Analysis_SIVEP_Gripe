@@ -7,10 +7,6 @@ env/
 data/raw/*.csv
 data/processed/*.csv
 data/results/
-
-# Gráficos e Relatórios (Opcional, geralmente gerados localmente)
-reports/figures/
-
 # Cache do Python
 __pycache__/
 *.py[cod]
