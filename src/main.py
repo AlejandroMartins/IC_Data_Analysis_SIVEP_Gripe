@@ -89,7 +89,7 @@ def main():
         if os.path.exists(FILTERED_VSR_DATA):
             # Analisa características para todos os K para garantir gráficos de todos
             for k in k_valores:
-                analisar_caracteristicas_clusters(FILTERED_VSR_DATA, k, periodos, gerar_graficos_caracteristicas)
+                analisar_caracteristicas_clusters(FILTERED_VSR_DATA, k, periodos, gerar_graficos_caracteristicas, metric=args.metric)
             
             # Consolida métricas de onda
             configs_onda = [{"periodo": p, "dados": CLUSTERING_DATA_PATHS[p]} for p in periodos]

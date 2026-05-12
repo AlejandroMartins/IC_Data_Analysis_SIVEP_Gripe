@@ -74,7 +74,7 @@ def rodar_clustering(df, X_tslearn, dist_matrix, n_clusters, nome_periodo, metri
 
     # Salvar resultados
     resultado = pd.DataFrame({"UF": df.index, "Cluster": y_pred})
-    csv_saida = RESULTADO_K_PERIODO_CSV.format(n_clusters, nome_periodo)
+    csv_saida = RESULTADO_K_PERIODO_CSV.format(n_clusters, nome_periodo, metric)
     os.makedirs(os.path.dirname(csv_saida), exist_ok=True)
     resultado.to_csv(csv_saida, index=False)
 

@@ -65,7 +65,7 @@ CLUSTERING_DATA_PATHS = {
 }
 
 # Constantes adicionais para métricas e tabelas analíticas
-CHARACTERISTICS_CLUSTERS_CSV = os.path.join(METRICS_RESULTS_DIR, "caracteristicas_clusters_k{}.csv")
-METRICS_PER_UF_CSV = os.path.join(METRICS_RESULTS_DIR, "metricas_por_uf_k{}.csv")
-GENERAL_UFS_ANALYTICAL_TABLE = os.path.join(METRICS_RESULTS_DIR, "tabela_analitica_geral_ufs.csv")
-GENERAL_CLUSTERS_SUMMARY_TABLE = os.path.join(METRICS_RESULTS_DIR, "resumo_geral_clusters.csv")
+CHARACTERISTICS_CLUSTERS_CSV = os.path.join(METRICS_RESULTS_DIR, "caracteristicas_clusters_k{}_{}.csv")
+METRICS_PER_UF_CSV = os.path.join(METRICS_RESULTS_DIR, "metricas_por_uf_k{}_{}.csv")
+GENERAL_UFS_ANALYTICAL_TABLE = os.path.join(METRICS_RESULTS_DIR, "tabela_analitica_geral_ufs_{}.csv")
+GENERAL_CLUSTERS_SUMMARY_TABLE = os.path.join(METRICS_RESULTS_DIR, "resumo_geral_clusters_{}.csv")
