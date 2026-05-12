@@ -6,9 +6,9 @@ import os
 import numpy as np
 from src.config import CLUSTER_FIGURES_DIR, BOXPLOT_FIGURES_DIR
 
-def gerar_graficos_caracteristicas(df_stats, periodo, k_escolhido):
+def gerar_graficos_caracteristicas(df_stats, periodo, k_escolhido,metric="dtw"):
     """ Gera gráficos de barras para as características dos clusters. """
-    pasta = os.path.join(CLUSTER_FIGURES_DIR, f'Caracteristicas_K{k_escolhido}')
+    pasta = os.path.join(CLUSTER_FIGURES_DIR, metric.lower(), f'Caracteristicas_K{k_escolhido}')
     os.makedirs(pasta, exist_ok=True)
     
     df_plot = df_stats.copy()
@@ -40,12 +40,12 @@ def gerar_graficos_caracteristicas(df_stats, periodo, k_escolhido):
         plt.savefig(os.path.join(pasta, f'{periodo}_Gravidade.png'), dpi=300)
         plt.close()
 
-def gerar_boxplot_com_siglas(df_dados, metrica, titulo, eixo_y_label, nome_arquivo_saida):
+def gerar_boxplot_com_siglas(df_dados, metrica, titulo, eixo_y_label, nome_arquivo_saida, metric="dtw"):
     """ Desenha boxplots com as siglas das UFs. """
     if df_dados.empty: return
     
     k_val = df_dados['K'].iloc[0] if 'K' in df_dados.columns else "X"
-    pasta = os.path.join(BOXPLOT_FIGURES_DIR, f'Boxplots_UFs_K{k_val}')
+    pasta = os.path.join(BOXPLOT_FIGURES_DIR, metric.lower(), f'Boxplots_UFs_K{k_val}')
     os.makedirs(pasta, exist_ok=True)
     
     plt.figure(figsize=(12, 7))

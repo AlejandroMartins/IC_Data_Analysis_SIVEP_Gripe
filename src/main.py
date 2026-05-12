@@ -64,7 +64,7 @@ def main():
         return
 
     setup_directories()
-    k_valores = [4, 5, 6]
+    k_valores = [5]
     periodos = ['PRE_PANDEMIA', 'PANDEMIA', 'POS_PANDEMIA']
 
     if args.step in ['all', 'process_raw']:
@@ -85,22 +85,26 @@ def main():
         if os.path.exists(FILTERED_VSR_DATA):
             extrair_caracteristicas_ano_uf(FILTERED_VSR_DATA, FEATURES_BY_YEAR_UF_CSV)
 
-    if args.step in ['all', 'analyze_clusters']:
-        if os.path.exists(FILTERED_VSR_DATA):
-            # Analisa características para todos os K para garantir gráficos de todos
-            for k in k_valores:
-                analisar_caracteristicas_clusters(FILTERED_VSR_DATA, k, periodos, gerar_graficos_caracteristicas, metric=args.metric)
-            
-            # Consolida métricas de onda
-            configs_onda = [{"periodo": p, "dados": CLUSTERING_DATA_PATHS[p]} for p in periodos]
-            calcular_e_consolidar_metricas(configs_onda, k_valores)
+    metricas_para_rodar = ['dtw', 'euclidean'] if args.step == 'all' else [args.metric]
 
-    if args.step in ['all', 'analyze_uf_metrics']:
-        if os.path.exists(FILTERED_VSR_DATA):
-            # Gera os boxplots por UF para TODOS os valores de K (4, 5, 6)
-            for k in k_valores:
-                print(f">>> Gerando boxplots para K={k}...")
-                analisar_metricas_uf(FILTERED_VSR_DATA, k, periodos, gerar_boxplot_com_siglas)
+    for m in metricas_para_rodar:
+    
+        if args.step in ['all', 'run_clustering']:
+            executar_clustering(CLUSTERING_DATA_PATHS, k_valores, metric=m)
+
+        if args.step in ['all', 'analyze_clusters']:
+            if os.path.exists(FILTERED_VSR_DATA):
+                for k in k_valores:
+                    analisar_caracteristicas_clusters(FILTERED_VSR_DATA, k, periodos, gerar_graficos_caracteristicas, metric=m)
+                
+                configs_onda = [{"periodo": p, "dados": CLUSTERING_DATA_PATHS[p]} for p in periodos]
+                calcular_e_consolidar_metricas(configs_onda, k_valores, metric=m)
+
+        # if args.step in ['all', 'analyze_uf_metrics']:
+        #     if os.path.exists(FILTERED_VSR_DATA):
+        #         for k in k_valores:
+        #             print(f">>> Gerando boxplots para K={k} ({m.upper()})...")
+        #             analisar_metricas_uf(FILTERED_VSR_DATA, k, periodos, gerar_boxplot_com_siglas, metric=m)
 
     if args.step in ['all', 'run_dashboards']:
         if os.path.exists(FILTERED_VSR_DATA):

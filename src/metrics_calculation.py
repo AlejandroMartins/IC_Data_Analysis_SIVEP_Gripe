@@ -78,14 +78,14 @@ def calcular_estatisticas_cluster(grupo):
         "% UTI": round(perc_uti, 2), "% Suporte Invasivo": round(perc_sup_inv, 2), "% Obito": round(perc_obito, 2)
     })
 
-def analisar_caracteristicas_clusters(arquivo_bruto, k_escolhido, periodos, gerar_graficos_func):
+def analisar_caracteristicas_clusters(arquivo_bruto, k_escolhido, periodos, gerar_graficos_func, metric="dtw"):
     print(f"=== ANALISE DE CARACTERISTICAS (K={k_escolhido}) ===", flush=True)
     df_pacientes = pre_processar_dados_pacientes(arquivo_bruto)
     if df_pacientes.empty: return
 
     lista_estat = []
     for periodo in periodos:
-        arquivo_ids = RESULTADO_K_PERIODO_CSV.format(k_escolhido, periodo)
+        arquivo_ids = RESULTADO_K_PERIODO_CSV.format(k_escolhido, periodo, metric)
         if not os.path.exists(arquivo_ids): continue
         df_ids = pd.read_csv(arquivo_ids)
         df_p = df_pacientes[df_pacientes["PERIODO"] == periodo].copy()
@@ -98,12 +98,12 @@ def analisar_caracteristicas_clusters(arquivo_bruto, k_escolhido, periodos, gera
         estat["Estados_do_Cluster"] = df_p.groupby("Cluster")["SG_UF_NOT"].apply(lambda x: ", ".join(sorted(x.unique())))
         estat["PERIODO"] = periodo
         lista_estat.append(estat)
-        gerar_graficos_func(estat, periodo, k_escolhido)
+        gerar_graficos_func(estat, periodo, k_escolhido, metric=metric)
 
     if lista_estat:
         df_f = pd.concat(lista_estat)
         os.makedirs(METRICS_RESULTS_DIR, exist_ok=True)
-        df_f.to_csv(CHARACTERISTICS_CLUSTERS_CSV.format(k_escolhido), sep=";", decimal=",", encoding="utf-8-sig")
+        df_f.to_csv(CHARACTERISTICS_CLUSTERS_CSV.format(k_escolhido, metric), sep=";", decimal=",", encoding="utf-8-sig")
 
 def calcular_metricas_por_estado(serie):
     v = serie.values
@@ -123,7 +123,7 @@ def calcular_metricas_por_estado(serie):
         "Amplitude_Media": np.mean(amplitudes) if amplitudes else 0
     }
 
-def calcular_e_consolidar_metricas(configs, k_lista):
+def calcular_e_consolidar_metricas(configs, k_lista,metric="dtw"):
     print("=== CONSOLIDANDO MÉTRICAS DE ONDA ===", flush=True)
     dados_ufs, dados_clusters = [], []
     for cfg in configs:
@@ -131,7 +131,7 @@ def calcular_e_consolidar_metricas(configs, k_lista):
         if not os.path.exists(arquivo): continue
         df_s = pd.read_csv(arquivo, index_col=0)
         for k in k_lista:
-            arquivo_c = RESULTADO_K_PERIODO_CSV.format(k, periodo)
+            arquivo_c = RESULTADO_K_PERIODO_CSV.format(k, periodo, metric)
             if not os.path.exists(arquivo_c): continue
             df_c = pd.read_csv(arquivo_c)
             metricas_deste_cenario = []
@@ -164,15 +164,15 @@ def calcular_e_consolidar_metricas(configs, k_lista):
         os.makedirs(METRICS_RESULTS_DIR, exist_ok=True)
         pd.DataFrame(dados_ufs).to_csv(GENERAL_UFS_ANALYTICAL_TABLE, index=False, sep=";", decimal=",", encoding="utf-8-sig")
     if dados_clusters:
-        pd.DataFrame(dados_clusters).to_csv(GENERAL_CLUSTERS_SUMMARY_TABLE, index=False, sep=";", decimal=",", encoding="utf-8-sig")
+        pd.DataFrame(dados_clusters).to_csv(GENERAL_CLUSTERS_SUMMARY_TABLE.format(metric), index=False, sep=";", decimal=",", encoding="utf-8-sig")
 
-def analisar_metricas_uf(arquivo_bruto, k_escolhido, periodos, gerar_boxplot_func):
+def analisar_metricas_uf(arquivo_bruto, k_escolhido, periodos, gerar_boxplot_func,metric="dtw"):
     print(f"=== ANALISE METRICAS POR UF (K={k_escolhido}) ===", flush=True)
     df_pacientes = pre_processar_dados_pacientes(arquivo_bruto)
     if df_pacientes.empty: return
     lista_m = []
     for periodo in periodos:
-        arquivo_ids = RESULTADO_K_PERIODO_CSV.format(k_escolhido, periodo)
+        arquivo_ids = RESULTADO_K_PERIODO_CSV.format(k_escolhido, periodo, metric)
         if not os.path.exists(arquivo_ids): continue
         df_ids = pd.read_csv(arquivo_ids)
         df_p = df_pacientes[df_pacientes["PERIODO"] == periodo].copy()
@@ -195,4 +195,4 @@ def analisar_metricas_uf(arquivo_bruto, k_escolhido, periodos, gerar_boxplot_fun
                 gerar_boxplot_func(m_uf, metrica, f"{metrica} - {periodo}", metrica, f"boxplot_{metrica}_{periodo}.png")
 
     if lista_m:
-        pd.concat(lista_m).to_csv(METRICS_PER_UF_CSV.format(k_escolhido), index=False, sep=";", decimal=",", encoding="utf-8-sig")
+        pd.concat(lista_m).to_csv(METRICS_PER_UF_CSV.format(k_escolhido, metric), index=False, sep=";", decimal=",", encoding="utf-8-sig")

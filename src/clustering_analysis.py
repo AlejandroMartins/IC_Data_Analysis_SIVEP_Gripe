@@ -94,7 +94,7 @@ def rodar_clustering(df, X_tslearn, dist_matrix, n_clusters, nome_periodo, metri
     
     plt.suptitle(f"K-Medoids PAM ({metric}) - {nome_periodo} (K={n_clusters}) | Sil: {silhouette:.4f}")
     plt.tight_layout()
-    figure_path = os.path.join(CLUSTER_FIGURES_DIR, f"cluster_k{n_clusters}_{nome_periodo}_{metric}.png")
+    figure_path = os.path.join(CLUSTER_FIGURES_DIR,metric.lower(),f"cluster_k{n_clusters}_{nome_periodo}_{metric}.png")
     os.makedirs(os.path.dirname(figure_path), exist_ok=True)
     plt.savefig(figure_path, dpi=300)
     plt.close()
